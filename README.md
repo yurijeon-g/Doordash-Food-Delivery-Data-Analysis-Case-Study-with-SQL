@@ -463,5 +463,83 @@ FROM fooddelivery;
 | 20.15157 | 80.16231 | 79.84843 | 43.96772 | 18078 |
   
    
+### Order Frequency per Hour
+
+ ``` sql
+SELECT EXTRACT(hour FROM customer_order_timestamp) as Hour, count(*) as 
+"no. of orders"
+FROM fooddelivery
+GROUP BY 1
+ORDER BY 2 DESC
+
+  ```
   
+## Analysis of Drivers
+
+### Calcuating median tips for drivers by the hour
+**What hour of the day do drivers recieve the most tips?**
+
+ ``` sql
+
+SELECT date_part('hour',customer_order_timestamp), percentile_cont(.5) WITHIN GROUP
+(ORDER BY amount_of_tip)  FROM fooddelivery 
+
+GROUP BY 1 
+ORDER BY 2 DESC
+  ```
+
+| date_part | percentile_cont |
+| --- | --- |
+| 16 | 7.78 |
+| 0 | 5.06 |
+| 20 | 4.855 |
+| 22 | 4 |
+| 1 | 3.81 |
+| 23 | 3.645 |
+
+
+  ### Hourly Tip per Driver
+**Which driver earns the most amount of tips per hour on the average?**
+
+ ``` sql
+With main as (SELECT driver_id, ABS(SUM(hours_worked)) as totalhours, SUM(amount_of_tip) as totaltip FROM (select driver_id, EXTRACT(epoch FROM driver_delivery_time)/3600 AS hours_worked, amount_of_tip From driverdelivery) sub GROUP BY driver_id
+ORDER BY 2 DESC)
+
+SELECT driver_id, (totaltip/totalhours) tiphourly, totalhours FROM main WHERE totalhours >10 ORDER BY 2 DESC 
+
+
+  ```
+| driver_id | tiphourly | totalhours |
+| --- | --- | --- |
+| 329 | 13.02963 | 18.58917 |
+| 87 | 12.36148 | 15.95278 |
+| 139 | 12.29624 | 16.24806 |
+| 97 | 12.26799 | 25.61056 |
+| 116 | 12.12354 | 17.99639 |
+| 157 | 12.04275 | 12.39833 |
+| 49 | 11.92401 | 19.82806 |
+| 24 | 11.81643 | 11.73028 |
+| 337 | 11.66848 | 18.02806 |
+
+
+  ### XX
+
+ ``` sql
+SELECT EXTRACT(hour FROM customer_order_timestamp) as Hour, count(*) as 
+"no. of orders"
+FROM fooddelivery
+GROUP BY 1
+ORDER BY 2 DESC
+
+  ```
   
+  ### XX
+
+ ``` sql
+SELECT EXTRACT(hour FROM customer_order_timestamp) as Hour, count(*) as 
+"no. of orders"
+FROM fooddelivery
+GROUP BY 1
+ORDER BY 2 DESC
+
+  ```
