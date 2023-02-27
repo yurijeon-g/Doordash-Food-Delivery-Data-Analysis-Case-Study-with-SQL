@@ -681,7 +681,7 @@ ORDER BY
 
 6 am was found to only have 12 orders in the query just now that showed order count by hour. Thus, the value of 0.5 is not very insightful considering the low amount of orders. However, an interesting insight is that orders from  dinner time hours of 6-8pm seem to see quite a high refund rate.
 
-### Slowest Drivers against Drivers with highest refund request
+### Slowest Drivers against Drivers with Highest Refund Rate
 **Investigating whether speed of delivery is a contributing factor by comparing driver's delivery speed against driver's refund request rate**
 
  ``` sql
@@ -694,3 +694,19 @@ SELECT count (*) FROM driver_refunds INNER JOIN driveravgtime ON driver_refunds.
 ```
 
 Only 2 drivers are in the slowest average time and highest refund count list. There does not seem to be a significant overlap between these 2 characteristics
+
+### Correlation between total time taken and refund count
+
+ ``` sql
+With i as (SELECT time_ntile, count(refunded_amount) as ref
+FROM(SELECT total_time, NTILE(100) OVER (ORDER BY total_time) as time_ntile, refunded_amount, is_asap
+FROM fooddelivery) as x
+WHERE refunded_amount > 0 AND is_asap= 'TRUE'
+GROUP BY time_ntile
+ORDER by 1)
+
+SELECT corr(time_ntile, ref)
+FROM i
+```
+
+Correlation comes out to 0.22 thus signifying that there is not actually a large correlation between time taken for a delivery and refund requests.
