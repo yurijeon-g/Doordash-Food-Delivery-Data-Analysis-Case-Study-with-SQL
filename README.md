@@ -94,29 +94,20 @@ WHERE customer_order_timestamp > delivered_to_consumer_timestamp
 
  ``` sql
 UPDATE fooddelivery
-SET
-    order_with_restaurant_timestamp = to_timestamp(
-        CASE WHEN customer_order_timestamp > order_with_restaurant_timestamp
-             THEN to_char(order_with_restaurant_timestamp + INTERVAL '1 month', 'YYYY-02-DD HH24:MI:SS')
-             ELSE to_char(order_with_restaurant_timestamp, 'YYYY-02-DD HH24:MI:SS')
-        END,
-        'YYYY-MM-DD HH24:MI:SS'
-    ),
-    driver_at_restaurant_timestamp = to_timestamp(
-        CASE WHEN customer_order_timestamp > driver_at_restaurant_timestamp
-             THEN to_char(driver_at_restaurant_timestamp + INTERVAL '1 month', 'YYYY-02-DD HH24:MI:SS')
-             ELSE to_char(driver_at_restaurant_timestamp, 'YYYY-02-DD HH24:MI:SS')
-        END,
-        'YYYY-MM-DD HH24:MI:SS'
-    ),
-    delivered_to_consumer_timestamp = to_timestamp(
-        CASE WHEN customer_order_timestamp > delivered_to_consumer_timestamp
-             THEN to_char(delivered_to_consumer_timestamp + INTERVAL '1 month', 'YYYY-02-DD HH24:MI:SS')
-             ELSE to_char(delivered_to_consumer_timestamp, 'YYYY-02-DD HH24:MI:SS')
-        END,
-        'YYYY-MM-DD HH24:MI:SS'
-    )
-WHERE customer_order_timestamp > delivered_to_consumer_timestamp;
+SET delivered_to_consumer_timestamp = delivered_to_consumer_timestamp + INTERVAL '1 month'
+WHERE customer_order_timestamp > delivered_to_consumer_timestamp
+
+UPDATE fooddelivery
+SET order_with_restaurant_timestamp
+ = order_with_restaurant_timestamp + INTERVAL '1 month'
+WHERE customer_order_timestamp > order_with_restaurant_timestamp
+;
+
+UPDATE fooddelivery
+SET driver_at_restaurant_timestamp = driver_at_restaurant_timestamp
+ + INTERVAL '1 month'
+WHERE customer_order_timestamp > driver_at_restaurant_timestamp
+;
 
 
   ```
@@ -316,34 +307,31 @@ LEFT JOIN r ON p.restaurant_id= r.restaurant_id
 WHERE ntile = 1
 ORDER BY total DESC;
 
+  ```
 | restaurant_id | total | delivery_region | avgdelivery | ranking |
 | --- | --- | --- | --- | --- |
-| 303 | 51.24 | Palo Alto | 1:11:00 | 225 |
-| 392 | 50.91 | San Jose | 1:22:50 | 219 |
-| 323 | 49.45 | San Jose | 1:18:57 | 215 |
-| 383 | 49.36 | San Jose | 04:38.5 | 178 |
-| 151 | 48.37 | San Jose | 0:47:24 | 35 |
-| 57 | 46.75 | Palo Alto | 41:01.5 | 56 |
-| 130 | 45.15 | San Jose | 0:59:25 | 138 |
+| 303 | 51.24 | Palo Alto | 1:11:00 | 255 |
+| 392 | 50.91 | San Jose | 1:22:50 | 246 |
+| 323 | 49.45 | San Jose | 1:18:57 | 241 |
+| 383 | 49.36 | San Jose | 04:38.5 | 187 |
+| 151 | 48.37 | San Jose | 0:47:24 | 36 |
+| 57 | 46.75 | Palo Alto | 41:01.5 | 58 |
 | 378 | 45.15 | San Jose | 0:24:16 | 1 |
-| 400 | 42.92 | San Jose | 1:08:15 | 187 |
-| 408 | 37.12 | Mountain View | 20:39.5 | 217 |
-| 335 | 36.94 | Mountain View | 0:38:38 | 227 |
-| 177 | 34.76 | San Jose | 1:40:50 | 241 |
-| 250 | 31.83 | Palo Alto | 0:36:36 | 112 |
-| 368 | 31.5 | Mountain View | 1:22:22 | 218 |
-| 225 | 28.73 | Palo Alto | 0:39:48 | 63 |
-| 116 | 26.06 | Palo Alto | 0:45:14 | 312 |
-| 226 | 25.52 | Palo Alto | 1:04:25 | 185 |
-| 338 | 23.35 | Mountain View | 0:41:36 | 12 |
+| 130 | 45.15 | San Jose | 0:59:25 | 143 |
+| 400 | 42.92 | San Jose | 1:08:15 | 201 |
+| 408 | 37.12 | Mountain View | 20:39.5 | 243 |
+| 335 | 36.94 | Mountain View | 0:38:38 | 257 |
+| 177 | 34.76 | San Jose | 1:40:50 | 277 |
+| 250 | 31.83 | Palo Alto | 0:36:36 | 117 |
+| 368 | 31.5 | Mountain View | 1:22:22 | 245 |
+| 225 | 28.73 | Palo Alto | 0:39:48 | 65 |
+| 116 | 26.06 | Palo Alto | 0:45:14 | 105 |
+| 226 | 25.52 | Palo Alto | 1:04:25 | 197 |
 | 363 | 23.35 | San Jose | 0:44:10 | 19 |
+| 338 | 23.35 | Mountain View | 0:41:36 | 12 |
 | 260 | 18.94 | Palo Alto | 0:59:05 | 29 |
-| 25 | -3 | Palo Alto | 1:41:04 | 181 |
-| 210 | -11.1 | Palo Alto | 366 days 01:07:02 | 314 |
-
-
-  ```
-
+| 25 | -3 | Palo Alto | 1:41:04 | 190 |
+| 210 | -11.1 | Palo Alto | 1:07:02 | 91 |
 
 **High Ranking Restaurants against Avg Delivery Time**
 You can see that the higher revenue generating restaurants tend to have a much higher ranking in terms of average delivery time
@@ -363,27 +351,27 @@ ORDER BY total DESC;
   ```
 | restaurant_id | total | delivery_region | avgdelivery | ranking |
 | --- | --- | --- | --- | --- |
-| 9 | 38846.96 | Palo Alto | 03:19.0 | 274 |
-| 8 | 37716.77 | Palo Alto | 14:09.7 | 272 |
-| 20 | 31697.43 | Palo Alto | 31:14.9 | 273 |
-| 63 | 26671.6 | Palo Alto | 16:19.4 | 224 |
-| 107 | 25549.49 | Palo Alto | 2 days 06:46:44.498982 | 285 |
-| 10 | 21776.36 | Palo Alto | 1 day 23:42:04.88189 | 283 |
-| 68 | 19101.26 | Palo Alto | 01:44.7 | 160 |
-| 12 | 15319.42 | Palo Alto | 1 day 14:27:42.023305 | 278 |
-| 3 | 14308.12 | Palo Alto | 1 day 10:44:26.330827 | 276 |
-| 5 | 12787.61 | Palo Alto | 3 days 20:11:44.26943 | 293 |
-| 28 | 11622.84 | Palo Alto | 1 day 13:02:49.269388 | 277 |
-| 27 | 10864.67 | Palo Alto | 3 days 02:46:35.171548 | 288 |
-| 98 | 10603.74 | Mountain View | 1 day 20:46:09.895522 | 279 |
-| 83 | 10545.24 | Palo Alto | 1 day 17:56:40.502304 | 280 |
-| 19 | 10025.15 | Palo Alto | 28:55.4 | 255 |
-| 205 | 9711.67 | Palo Alto | 1 day 20:09:32.741463 | 281 |
-| 100 | 9647.06 | Palo Alto | 2 days 05:06:20.047337 | 284 |
-| 47 | 9460.4 | Palo Alto | 39:33.5 | 239 |
-| 6 | 9294.8 | Palo Alto | 1 day 22:13:46.623116 | 282 |
-| 62 | 9178.59 | Palo Alto | 3 days 18:34:29.55102 | 299 |
-| 194 | 9004.15 | San Jose | 49:45.8 | 52 |  
+| 9 | 38846.96 | Palo Alto | 44:07.8 | 279 |
+| 8 | 37716.77 | Palo Alto | 25:46.5 | 252 |
+| 20 | 31697.43 | Palo Alto | 15:09.5 | 230 |
+| 63 | 26671.6 | Palo Alto | 16:19.4 | 253 |
+| 107 | 25549.49 | Palo Alto | 06:32.3 | 195 |
+| 10 | 21776.36 | Palo Alto | 35:28.0 | 271 |
+| 68 | 19101.26 | Palo Alto | 01:44.7 | 167 |
+| 12 | 15319.42 | Palo Alto | 14:28.8 | 228 |
+| 3 | 14308.12 | Palo Alto | 43:05.1 | 281 |
+| 5 | 12787.61 | Palo Alto | 10:11.0 | 214 |
+| 28 | 11622.84 | Palo Alto | 11:38.2 | 221 |
+| 27 | 10864.67 | Palo Alto | 16:12.6 | 232 |
+| 98 | 10603.74 | Mountain View | 04:04.5 | 179 |
+| 83 | 10545.24 | Palo Alto | 27:55.2 | 258 |
+| 19 | 10025.15 | Palo Alto | 28:55.4 | 296 |
+| 205 | 9711.67 | Palo Alto | 18:37.1 | 240 |
+| 100 | 9647.06 | Palo Alto | 07:45.3 | 198 |
+| 47 | 9460.4 | Palo Alto | 39:33.5 | 275 |
+| 6 | 9294.8 | Palo Alto | 05:20.1 | 288 |
+| 62 | 9178.59 | Palo Alto | 0:56:32 | 168 |
+| 194 | 9004.15 | San Jose | 49:45.8 | 54 |
   
      
 ## Analysis of Orders by Time of Day
@@ -400,7 +388,7 @@ ORDER BY 2 DESC
   ```
  **Distinguishing by Immediate vs Scheduled Orders** 
 
-
+**Immediate Orders**
  ``` sql
 SELECT date_part('hour',customer_order_timestamp), percentile_cont(.5) WITHIN GROUP
 (ORDER BY order_total ) FROM fooddelivery 
@@ -411,18 +399,23 @@ ORDER BY 2 DESC
   ```
 | date_part | percentile_cont |
 | --- | --- |
-| 0 | 127.4 |
-| 1 | 74.35 |
-| 9 | 41.72 |
-| 8 | 40.19 |
-| 10 | 39.44 |
-| 11 | 36.075 |
-| 12 | 34.7 |
-| 2 | 33.14 |
-| 7 | 32.315 |
-| 13 | 31.5 |
-| 3 | 30.615 |
+| 16 | 178.66 |
+| 15 | 76.14 |
+| 17 | 74.35 |
+| 1 | 41.695 |
+| 0 | 40.69 |
+| 2 | 38.03 |
+| 23 | 36.94 |
+| 3 | 34.66 |
+| 4 | 32.64 |
+| 18 | 31.45 |
+| 19 | 29.93 |
+| 20 | 28.35 |
+| 21 | 27.1 |
+| 22 | 22.815 |
+| 5 | 21.715 |
 
+**Scheduled Orders**
  ``` sql
 SELECT date_part('hour',customer_order_timestamp), percentile_cont(.5) WITHIN GROUP
 (ORDER BY order_total ) FROM fooddelivery 
@@ -433,16 +426,30 @@ ORDER BY 2 DESC
   ```
 | date_part | percentile_cont |
 | --- | --- |
-| 14 | 348.52 |
-| 16 | 293.095 |
-| 12 | 121.935 |
-| 13 | 103.765 |
-| 0 | 81.96 |
-| 20 | 70.23 |
-| 17 | 68.53 |
-| 1 | 68.48 |
-| 11 | 54.44 |
-| 2 | 54.29 |
+| 8 | 435.2 |
+| 5 | 348.52 |
+| 10 | 327.12 |
+| 7 | 242.91 |
+| 6 | 202.31 |
+| 4 | 86.21 |
+| 12 | 70.23 |
+| 16 | 69.405 |
+| 15 | 66.195 |
+| 17 | 61.98 |
+| 20 | 61.08 |
+| 3 | 57.75 |
+| 11 | 51.81 |
+| 0 | 51.675 |
+| 22 | 50.26 |
+| 18 | 50.015 |
+| 14 | 47.765 |
+| 23 | 46.645 |
+| 21 | 44.99 |
+| 1 | 44.55 |
+| 13 | 42.52 |
+| 19 | 41.83 |
+| 2 | 41.17 |
+| 9 | 19.63 |
   
      
 ### Scheduled vs Immediate Delivery out of Total Orders
@@ -471,9 +478,98 @@ SELECT EXTRACT(hour FROM customer_order_timestamp) as Hour, count(*) as
 FROM fooddelivery
 GROUP BY 1
 ORDER BY 2 DESC
+LIMIT 10
+  ```
+| hour | no. of orders |
+| --- | --- |
+| 1 | 3373 |
+| 0 | 2880 |
+| 2 | 2843 |
+| 3 | 1764 |
+| 18 | 1418 |
+| 19 | 1198 |
+| 23 | 1146 |
+| 20 | 889 |
+| 17 | 820 |
+| 4 | 656 |
+| 22 | 361 |
+| 21 | 328 |
+| 16 | 249 |
+| 15 | 73 |
+| 5 | 26 |
+| 14 | 16 |
+| 6 | 12 |
+| 7 | 9 |
 
+
+We see that people tend to order more frequently late at night as a midnight meal.
+
+### Highest Average Order Total by Hour
+
+ ``` sql
+SELECT EXTRACT(hour FROM customer_order_timestamp) as Hour, avg((order_total)) as 
+"avg order value"
+FROM fooddelivery
+GROUP BY 1
+ORDER BY 2 DESC
+  ```
+| hour | avg order value |
+| --- | --- |
+| 6 | 435.645 |
+| 7 | 391.5211 |
+| 10 | 327.12 |
+| 8 | 314.9933 |
+| 5 | 280.6058 |
+| 16 | 101.957 |
+| 17 | 93.89315 |
+| 15 | 88.50466 |
+| 14 | 79.08 |
+| 12 | 70.23 |
+| 22 | 66.0928 |
+| 23 | 57.04955 |
+| 11 | 51.81 |
+
+We see that strangely 6am ~ 8am and 10am have significantly higher average order values. We will look into the orders from these times to understand why this is the case.
+
+**Investigate the strange 6am high average order total**
+ ``` sql
+SELECT * FROM (SELECT *, EXTRACT(hour FROM customer_order_timestamp) as Hour
+FROM fooddelivery) b WHERE Hour in (6,7,8,10)
+ORDER BY order_total DESC
   ```
   
+Results will show that they are all scheduled orders. Thus, we will find the highest avg order total without scheduled orders. 
+
+**Adjusted avg order total per hour**
+ ``` sql
+SELECT EXTRACT(hour FROM customer_order_timestamp) as Hour, avg((order_total)) as 
+"avg order value"
+FROM fooddelivery
+WHERE IS_ASAP = 'TRUE'
+GROUP BY 1
+ORDER BY 2 DESC
+
+  ```
+| hour | avg order value |
+| --- | --- |
+| 16 | 178.66 |
+| 15 | 76.14 |
+| 17 | 74.35 |
+| 1 | 48.67216 |
+| 0 | 48.17345 |
+| 23 | 46.41321 |
+| 2 | 43.92599 |
+| 18 | 43.70335 |
+| 3 | 40.634 |
+| 19 | 38.4439 |
+| 4 | 36.69604 |
+| 20 | 34.89708 |
+| 21 | 32.59519 |
+| 5 | 26.48125 |
+| 22 | 24.09333 |
+
+Now we see that 4pm is the time period where average order total is much higher. However another interesting insight from this table is that morning orders are all scheduled orders.
+
 ## Analysis of Drivers
 
 ### Calcuating median tips for drivers by the hour
@@ -490,12 +586,25 @@ ORDER BY 2 DESC
 
 | date_part | percentile_cont |
 | --- | --- |
-| 16 | 7.78 |
-| 0 | 5.06 |
-| 20 | 4.855 |
-| 22 | 4 |
-| 1 | 3.81 |
-| 23 | 3.645 |
+| 8 | 7.91 |
+| 7 | 7.65 |
+| 12 | 4.855 |
+| 16 | 4.68 |
+| 15 | 4.19 |
+| 11 | 3.655 |
+| 14 | 3.465 |
+| 17 | 3.375 |
+| 22 | 3.19 |
+| 23 | 2.99 |
+| 9 | 2.94 |
+| 1 | 2.8 |
+| 0 | 2.79 |
+| 2 | 2.5 |
+| 13 | 2.47 |
+| 18 | 2.34 |
+| 3 | 2.16 |
+| 21 | 2.095 |
+| 19 | 1.99 |
 
 
   ### Hourly Tip per Driver
@@ -505,7 +614,12 @@ ORDER BY 2 DESC
 With main as (SELECT driver_id, ABS(SUM(hours_worked)) as totalhours, SUM(amount_of_tip) as totaltip FROM (select driver_id, EXTRACT(epoch FROM driver_delivery_time)/3600 AS hours_worked, amount_of_tip From driverdelivery) sub GROUP BY driver_id
 ORDER BY 2 DESC)
 
-SELECT driver_id, (totaltip/totalhours) tiphourly, totalhours FROM main WHERE totalhours >10 ORDER BY 2 DESC 
+SELECT driver_id, (totaltip/totalhours) tiphourly, totalhours FROM main 
+WHERE totalhours >10 
+ORDER BY 2 DESC 
+LIMIT 10
+
+
 
 
   ```
@@ -520,26 +634,74 @@ SELECT driver_id, (totaltip/totalhours) tiphourly, totalhours FROM main WHERE to
 | 49 | 11.92401 | 19.82806 |
 | 24 | 11.81643 | 11.73028 |
 | 337 | 11.66848 | 18.02806 |
+| 112 | 11.61889 | 19.56556 |
 
 
-  ### XX
+
+  ### Fastest median driver delivery time in hour
+**Finding out what hours of the day do drivers deliver the food the fastest**
+
 
  ``` sql
-SELECT EXTRACT(hour FROM customer_order_timestamp) as Hour, count(*) as 
-"no. of orders"
-FROM fooddelivery
+
+SELECT date_part('hour', customer_order_timestamp) as order_hour, 
+percentile_cont(.5) WITHIN GROUP
+(ORDER BY driver_delivery_time ) 
+as median_time FROM fooddelivery 
 GROUP BY 1
-ORDER BY 2 DESC
+order by 2 
+LIMIT 10
 
   ```
-  
-  ### XX
+| order_hour | median_time |
+| --- | --- |
+| 14 | 0:18:43 |
+| 13 | 19:51.5 |
+| 9 | 0:20:09 |
+| 17 | 0:20:28 |
+| 8 | 20:28.5 |
+| 20 | 21:07.5 |
+| 23 | 0:21:38 |
+| 21 | 21:46.5 |
+| 22 | 21:47.5 |
+| 3 | 0:21:55 |
 
+
+ Output shows that drivers are on median, the fastest in the afternoon at around 1 or 2pm
+
+##Exploring refunds
+
+**What hours of the days experience the most refund requests proportionally to total orders in that hour?
  ``` sql
-SELECT EXTRACT(hour FROM customer_order_timestamp) as Hour, count(*) as 
-"no. of orders"
-FROM fooddelivery
-GROUP BY 1
-ORDER BY 2 DESC
+SELECT 
+  date_part('hour', delivered_to_consumer_timestamp) AS hour,
+  COUNT(CASE WHEN refunded_amount > 0 THEN 1 END)::FLOAT / COUNT(*) AS refunded_orders_ratio
+FROM 
+  fooddelivery
+GROUP BY 
+  hour
+ORDER BY 
+  refunded_orders_ratio DESC;
+
 
   ```
+
+| hour | refunded_orders_ratio |
+| --- | --- |
+| 6 | 0.5 |
+| 18 | 0.046154 |
+| 19 | 0.036496 |
+| 22 | 0.033113 |
+| 20 | 0.029249 |
+| 1 | 0.028081 |
+| 5 | 0.027322 |
+| 0 | 0.0273 |
+| 4 | 0.025268 |
+| 21 | 0.02451 |
+| 2 | 0.022104 |
+| 3 | 0.021959 |
+| 23 | 0.008547 |
+
+
+6 am was found to only have 12 orders in the query just now that showed order count by hour. Thus, the value of 0.5 is not very insightful considering the low amount of orders. However, an interesting insight is that orders from  dinner time hours of 6-8pm seem to see quite a high refund rate.
+
