@@ -3,38 +3,13 @@ Using a dataset of Doordash found on Kaggle, I exercised my time analysis skills
 
 
 ## Introduction
-I will be analyzing the "fooddelivery" dataset, which contains information about doordash food delivery orders placed by consumers in a certain regions. The dataset includes information about the order, such as the restaurant and driver involved, as well as timestamps for when the order was placed and when it was delivered.
+DoorDash is a food delivery service that connects customers with local restaurants. To maintain its edge in an increasingly competitive market, DoorDash has invested heavily in data analytics to gain insights into customer preferences and improve its operations. In this portfolio project, I will analyze a dataset provided by DoorDash, which contains information on thousands of food deliveries. By examining this data,I will produce insights into the factors that drive orders and identify areas where DoorDash can improve its operations to better serve its customers. The dataset includes information such as the driver, restaurant, and customer IDs, the order total, amount of discount and tip, delivery time, and more. Using data analysis techniques, I will delve into this data to gain insights that will inform my understanding of DoorDash's operations.
 
-Throughout this project, I will be exploring the data to uncover insights and trends that can help improve the food delivery service for both consumers and drivers. By analyzing the dataset, I hope to answer questions such as: What are the most popular restaurants in the region? How long does it typically take for an order to be delivered? Are there any factors that influence whether an order is refunded?
+I hope to answer questions such as: What are the most popular restaurants in the region? How long does it typically take for an order to be delivered? Are there any factors that influence whether an order is refunded? Are there any particular relationships between these features?
+
 
 ## About the Data: 
-Below is a glossary of definitions for the variables included in the data set that may need clarification.
-
-Customer placed order datetime: Time that customer placed the order; the format is dd: hh: mm: ss
-
-Placed order with restaurant datetime: Time that restaurant received order; the format is dd: hh: mm: ss
-
-Driver at restaurant datetime: Time that driver arrives at restaurant; the format is dd: hh: mm: ss
-
-Delidered to consumer datetime: Time that driver delivered to customer; the format is dd: hh: mm: ss
-
-Driver ID: Unique identifier of driver
-Restaurant ID: Unique identifier of restaurant
-Consumer ID: Unique identifier of customer
-Delivery Region: City where restaurant is located
-
-Is ASAP: Equals TRUE for on-demand orders; FALSE for scheduled deliveries (e.g., a customer places an order at 10am for 12noon)
-
-Order total: Amount customer spent (including delivery fee); units are in dollars
-
-Amount discount: Amount of discounts redeemed (e.g., for referrals); units are in dollars
-
-Amount of tip: Amount of tip given; units are in dollars
-
-Refunded amount: Amount refunded to customer; units are in dollars
-
-Times: Time is in UTC 
-
+Glossary of the dataset is provided [here](https://github.com/yurijeon-g/Food-Delivery-Data-Analysis-Case-Study-with-SQL/blob/main/Data%20Glossary)
 
 
 ## Data Manipulation
@@ -66,7 +41,8 @@ ALTER TABLE fooddelivery DROP COLUMN Delivered_to_consumer_datetime;
   
 ### Correcting month portion of date time features
 As seen below, there are negative values for total time elapsed due to the lack of month in this data. The default was put as 1. Thus what would have been a new month by the time the food had been delivered is shown as a date earlier than when the customer ordered the food. 
-The query shows this inconsistency
+
+This query shows this inconsistency
 
  ``` sql
 SELECT total_time_elapsed customer_order_timestamp, order_with_restaurant_timestamp,	driver_at_restaurant_timestamp,delivered_to_consumer_timestamp 
@@ -90,7 +66,7 @@ WHERE customer_order_timestamp > delivered_to_consumer_timestamp
 
   ### Editing the month values to 02
 
-**In the case where the delivery of the food is recorded as an earlier date than when the customer ordered **
+**In the case where the delivery of the food is recorded as an earlier date than when the customer ordered**
 
  ``` sql
 UPDATE fooddelivery
