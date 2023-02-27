@@ -705,3 +705,16 @@ ORDER BY
 
 6 am was found to only have 12 orders in the query just now that showed order count by hour. Thus, the value of 0.5 is not very insightful considering the low amount of orders. However, an interesting insight is that orders from  dinner time hours of 6-8pm seem to see quite a high refund rate.
 
+### Slowest Drivers against Drivers with highest refund request
+**Investigating whether speed of delivery is a contributing factor by comparing driver's delivery speed against driver's refund request rate**
+
+ ``` sql
+With driver_refunds as (SELECT driver_id, sum(refunded_amount), count(refunded_amount) FROM fooddelivery WHERE is_asap ='TRUE' AND refunded_amount > 1
+GROUP BY driver_id
+ORDER BY count DESC LIMIT 20), driveravgtime as (SELECT driver_id, avg(driver_delivery_time) FROM fooddelivery GROUP BY driver_id ORDER BY 2 LIMIT 20) 
+
+SELECT count (*) FROM driver_refunds INNER JOIN driveravgtime ON driver_refunds.driver_id= driveravgtime.driver_id
+
+```
+
+Only 2 drivers are in the slowest average time and highest refund count list. There does not seem to be a significant overlap between these 2 characteristics
