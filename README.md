@@ -1,5 +1,5 @@
 # Food-Delivery-Data-Analysis-Case-Study-with-SQL
-Using a dataset of Doordash found on Kaggle, I exercised my time analysis skills to manipulate and uncover insights about food delivery intervals as well as insights on driver income, hourly trends in high demand for food delivery as well as identified high revenue grossing restaurants and analyzed contributing factors to high grossing restaurants. 
+Using a dataset of Doordash (source: Kaggle), I had the opportunity to exercise my time analysis skills to manipulate and uncover insights about food delivery intervals as well as insights on driver income, hourly trends in high demand for food delivery as well as identified high revenue grossing restaurants and analyzed contributing factors to high grossing restaurants. 
 
 
 ## Introduction
