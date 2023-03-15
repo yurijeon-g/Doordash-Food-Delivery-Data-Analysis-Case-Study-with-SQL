@@ -15,9 +15,21 @@ The first section shows the revenue and order volume of each delivery region. Fr
 
 The second section, "Identifying Low & High Performing Restaurants," provides insight into the best and worst-performing restaurants based on their revenue. The analysis includes a partitioned bottom 5% of the total revenue into evenly distributed bins. This result considers potential refunds and subtracts them from the order total if they occur. The analysis reveals that the lowest revenue-generating restaurants are in Palo Alto. This information can be helpful in the decision-making process to improve the business of underperforming restaurants.
 
-Lastly, the third section analyzes the relationship between delivery time and restaurant ranking. The data suggests that there is no correlation between a low ranking and average delivery time. The results reveal that restaurant 303 has the lowest ranking, despite having the second-fastest delivery time. This information could indicate that other factors besides delivery time, such as customer service or menu selection, may contribute to restaurant ranking.
+The third section analyzes the relationship between delivery time and restaurant ranking. The data suggests that there is no correlation between a low ranking and average delivery time. The results reveal that restaurant 303 has the lowest ranking, despite having the second-fastest delivery time. This information could indicate that other factors besides delivery time, such as customer service or menu selection, may contribute to restaurant ranking.
 
-Overall, this data analysis project provides helpful insights to evaluate the restaurant and region breakdown, allowing stakeholders to make data-driven decisions to improve business.
+This provides helpful insights to evaluate the restaurant and region breakdown, allowing stakeholders to make data-driven decisions to improve business.
+
+In fourth section, the focus is on the orders by time of day. The results show the highest median order values by the hour, distinguishing between immediate vs. scheduled orders, order frequency per hour, and the highest average order total by hour.
+
+The highest median order values by the hour show the hour of the day with the highest median order value. The results show that 4 PM has the highest median order value, followed by 3 PM, 5 PM, and 1 AM. This information can help the food delivery service providers to plan their staffing and inventory management better.
+
+Distinguishing immediate and scheduled orders by hour can also help providers to improve their service delivery. The results show that immediate orders have the highest median order value at 4 PM, followed by 3 PM and 5 PM. Scheduled orders, on the other hand, have the highest median order value at 8 AM, followed by 5 AM and 10 AM. Providers can use this information to plan their service delivery better, especially in terms of staffing and inventory management.
+
+Order frequency per hour shows the number of orders per hour of the day. The results show that people tend to order more frequently late at night as a midnight meal. This information can help food delivery providers to optimize their service delivery during peak hours.
+
+The highest average order total by the hour provides insight into the time of day with the highest average order value. The results show that 6 AM to 8 AM and 10 AM have significantly higher average order values. Providers can use this information to identify the food items that sell better during these hours and plan their inventory accordingly.
+
+Overall, the analysis of orders by time of day provides valuable insights into how food delivery services can improve their service delivery. By understanding the customers' ordering patterns, providers can optimize their staffing and inventory management, leading to better customer satisfaction.
 
 
 ## About the Data: 
