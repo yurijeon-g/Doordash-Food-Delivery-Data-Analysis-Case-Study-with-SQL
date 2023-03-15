@@ -7,6 +7,18 @@ DoorDash is a food delivery service that connects customers with local restauran
 
 I hope to answer questions such as: What are the most popular restaurants in the region? How long does it typically take for an order to be delivered? Are there any factors that influence whether an order is refunded? Are there any particular relationships between these features?
 
+## Insights from the Analysis
+
+The data analysis project above provides information about the restaurant and region breakdown. The results are divided into three sections; delivery region breakdown, identifying low and high performing restaurants, and the relationship between delivery time and restaurant ranking.
+
+The first section shows the revenue and order volume of each delivery region. From the revenue breakdown, we can conclude that Palo Alto generates the most revenue, followed by Mountain View and San Jose. On the other hand, when we look at the order volume, Palo Alto still dominates with the highest number of orders, followed by Mountain View and San Jose.
+
+The second section, "Identifying Low & High Performing Restaurants," provides insight into the best and worst-performing restaurants based on their revenue. The analysis includes a partitioned bottom 5% of the total revenue into evenly distributed bins. This result considers potential refunds and subtracts them from the order total if they occur. The analysis reveals that the lowest revenue-generating restaurants are in Palo Alto. This information can be helpful in the decision-making process to improve the business of underperforming restaurants.
+
+Lastly, the third section analyzes the relationship between delivery time and restaurant ranking. The data suggests that there is no correlation between a low ranking and average delivery time. The results reveal that restaurant 303 has the lowest ranking, despite having the second-fastest delivery time. This information could indicate that other factors besides delivery time, such as customer service or menu selection, may contribute to restaurant ranking.
+
+Overall, this data analysis project provides helpful insights to evaluate the restaurant and region breakdown, allowing stakeholders to make data-driven decisions to improve business.
+
 
 ## About the Data: 
 Glossary of the dataset is provided [here](https://github.com/yurijeon-g/Food-Delivery-Data-Analysis-Case-Study-with-SQL/blob/main/Data%20Glossary)
